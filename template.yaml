@@ -1,0 +1,31 @@
+steps:
+    - id: backstage_request
+      name: backstage request
+      action: http:backstage:request
+      input:
+        method: 'GET'
+        path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues'
+        headers:
+          test: 'hello'
+          foo: 'bar'
+        params:
+          name: 'test'
+          bar: 'foo'
+
+    - id: backstage_request_with_input
+      name: backstage request
+      action: http:backstage:request
+      input:
+        method: 'POST'
+        path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues/get/some/job{{ steps["backstage_request"].output.body.number }}'
+        headers:
+            test: 'hello'
+            foo: 'bar'
+        body:
+            name: 'test'
+            bar: 'foo'
+
+  output:
+    getResponse: '{{ steps["backstage_request_with_input"].output.body }}'
+    getCode: '{{ steps["backstage_request_with_input"].output.code }}'
+    getHeaders: '{{ steps["backstage_request_with_input"].output.headers }}'
